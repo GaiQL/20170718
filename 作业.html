@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	<style>
+		#box{
+			width:500px;
+			height:500px;
+			position:absolute;
+			border:1px solid #000;
+			border-radius:30px;
+		}
+		#box div{
+			height:100px;
+			line-height:100px;
+			text-align:center;
+			font-size:30px;
+		}
+		input{
+			height:30px;
+			line-height:30px;
+			width:270px;
+			border:1px solid #000;
+			border-radius:5px;
+			outline:none;
+			font-size:25px;
+		}
+		#submit{
+			width:100px;
+			border:1px solid #000;
+			text-decoration:none;
+			color:#000;
+			background:#19d9ea;
+		}
+	</style>
+	</head>
+	<body>
+		<section id="box">
+			<div>
+				<span>QQ:</span>
+				<input type="text"/>
+			</div>
+			<div>
+				<span>邮箱:</span>
+				<input type="text"/></div>
+			<div>
+				<span>手机号:</span>
+				<input type="text"/></div>
+			<div>
+				<span>出生年月:</span>
+				<input type="text"/></div>
+			<div>
+				<a href="#" id="submit">提交</a>
+			</div>
+		</section>
+		<script>
+			var w = innerWidth;
+			var h = innerHeight;
+			var box = document.getElementById('box');
+			box.style.left = (w/2) - (box.offsetWidth/2) +'px';
+			box.style.top = (h/2) - (box.offsetHeight/2) +'px';
+
+			var input = document.getElementsByTagName('input');
+
+			for(var i=0;i<input.length;i++){
+				input[i].onclick = function(){
+					if(!this.value){
+						this.style.border = '2px solid red';
+					}		
+				}
+			}
+			//qq:		1.不能以0开头 
+//						2.必须要为数字
+//						3.5-14位
+			input[0].oninput = function(){
+				var val = this.value;
+				if(/^[1-9]\d{4,13}$/.test(val)){
+					this.style.border = '2px solid green';
+				}else{
+					this.style.border = '2px solid red';
+				}
+			}
+			//邮箱:首为字母，5-20位,(@后3-5位）1-2位,.后3位
+			input[1].oninput = function(){
+				var val = this.value;
+				if(/^[A-Za-z][\w\-\.]{5,19}@([0-9A-Za-z]{3,5}\.){1,3}[a-z]{3,3}$/.test(val)){
+					this.style.border = '2px solid green';
+				}else{
+					this.style.border = '2px solid red';
+				}
+			}
+			//手机号：11位，第二位不能为1|2|6|9
+					//都是1开头的
+			input[2].oninput = function(){
+				var val = this.value;
+				if(/^1[34578]{10,10}$/.test(val)){
+					this.style.border = '2px solid green';
+				}else{
+					this.style.border = '2px solid red';
+				}
+			}
+			//出生年月
+				//格式首先要正确 数字，4-4
+				//年 2017；小于2017
+				//[[1][0-9][0-9][0-9] | [2]0[01][07];
+				//;
+			var date = new Date();
+			var year2 = date.getFullYear();
+			var month = date.getMonth()+1;
+			var day = date.getDate()
+			
+			var year = Number(year2);
+			var day = Number(day);
+			console.log(month);
+			input[3].oninput = function(){
+				var val = this.value;
+				///^\d{4,4}-\d{1,2}-\d{1,2}$/
+				var vye = val.substring(0,4);
+				var vye = Number(vye);
+				var vmo = Number(val.split('-')[1]);
+				var vda = Number(val.split('-')[2]);
+				console.log(vda,day)
+				if(/^\d{4,4}-\d{1,2}-\d{1,2}$/.test(val)){
+					this.style.border = '2px solid green';
+				}else{
+					this.style.border = '2px solid red';
+				}
+				if(vye>year){
+					console.log(1);
+					this.style.border = '2px solid red';
+				}
+				if(vye==year && vmo>month || vmo<1 || vmo>12){
+					this.style.border = '2px solid red';
+				}
+				//可以获取到输入的年份和月份，计算出当月一共有几天
+				//年 vye   月 vmo
+				var date2 = new Date();
+				date2.setMonth(vmo);
+				date2.setDate(0);
+				var eved = date2.getDate();
+				console.log(vmo,month)
+				if(vmo == month && vda > day || vda>eved || vda<1){
+					this.style.border = '2px solid red';
+				}
+			}
+		</script>
+	</body>
+</html>
