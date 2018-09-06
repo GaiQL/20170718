@@ -1,0 +1,41 @@
+@import '_rem.scss';
+
+body{
+  background:#000;
+  margin:0;
+  width: rem(750);
+}
+
+p{
+  margin:0;
+  padding:0;
+}
+
+.app_content{
+  padding:0 rem(37) 0 rem(37);
+    .input_line{
+      display: flex;
+      height:rem(96);
+      font-size: rem(26);
+      line-height: rem(96);
+      border-top:rem(1) solid #808080;
+      border-bottom:rem(1) solid #808080;
+      color:#ffffff;
+        *{
+          display:block;
+        }
+        label{
+          padding-right: rem(20);
+        }
+        input{
+          padding:0;
+          border:0;
+          outline: none;
+          background: #000;
+          color: #fff;
+          line-height: rem(96);
+          height: rem(96);
+          font-size: rem(26);
+        }
+    }
+}

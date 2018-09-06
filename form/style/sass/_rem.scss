@@ -1,0 +1,10 @@
+$browser-default-font-size: 16 !default;
+$plan_width:750;
+$rem:$plan_width/$browser-default-font-size;
+
+@function rem( $px ){
+  @return $px / $rem * 1rem;
+}
+
+
+     
