@@ -4,38 +4,94 @@ body{
   background:#000;
   margin:0;
   width: rem(750);
+  height: rem(1334);
+  display:flex;
 }
 
-p{
+p,ul{
   margin:0;
   padding:0;
 }
+li,ul{
+  list-style: none;
+}
+
+#app{
+  padding:0 rem(37) 0 rem(37);
+}
 
 .app_content{
-  padding:0 rem(37) 0 rem(37);
-    .input_line{
-      display: flex;
-      height:rem(96);
-      font-size: rem(26);
-      line-height: rem(96);
-      border-top:rem(1) solid #808080;
-      border-bottom:rem(1) solid #808080;
-      color:#ffffff;
-        *{
-          display:block;
-        }
-        label{
-          padding-right: rem(20);
-        }
-        input{
-          padding:0;
-          border:0;
-          outline: none;
-          background: #000;
-          color: #fff;
-          line-height: rem(96);
-          height: rem(96);
-          font-size: rem(26);
-        }
-    }
+  .input_line{
+    display: flex;
+    height:rem(96);
+    width:rem(676);
+    font-size: rem(26);
+    line-height: rem(96);
+    border-top:rem(1) solid #808080;
+    border-bottom:rem(1) solid #808080;
+    color:#ffffff;
+      *{
+        display:block;
+      }
+      label{
+        padding-right: rem(20);
+      }
+      input{
+        padding:0;
+        border:0;
+        outline: none;
+        background: #000;
+        color: #fff;
+        line-height: rem(96);
+        height: rem(96);
+        width: rem(400);
+        font-size: rem(26);
+      }
+  }
+}
+
+.app_fotter{
+  height: rem(90);
+  line-height: rem(90);
+  background: #ff0000;
+  color: #fff;
+  text-align: center;
+  font-size: rem(28);
+  border-radius: rem(8);
+  margin-top: rem(70);
+}
+
+.app_mask {
+  width: rem(750);
+  height: rem(1334);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background:#000;
+  opacity: .5;
+  transition: 5S;
+}
+
+.chooseModle{
+  width: rem(750);
+  height: rem(1334);
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display:flex;
+  justify-content:center;
+  align-items: center;
+   >ul{
+     width:rem(400);
+     background: #fff;
+     border-radius: rem(10);
+       >li{
+          height: rem(120);
+          line-height: rem(120);
+          font-size: rem(25);
+          text-align: center;
+       }
+   }
 }

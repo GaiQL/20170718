@@ -2,34 +2,26 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); //通过 npm 安装
 const webpack = require('webpack'); //访问内置的插件
 const path = require('path');  //无法被浏览器识别，但是loaders编译过后可以变成浏览器可识别的。在Node环境中可以直接运行
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin'); //压缩
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const PurifyCssWebpack = require('purifycss-webpack');
+const glob = require('glob');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-//-----完成react的按需加载和verdor
+
 const config = {
-  mode:'production',//'production',
+  mode:'production',
   entry: './entry.js',
   output: {
-    filename: '[name].js',
+    filename: '[name]@[chunkhash].js',
     path: path.resolve(__dirname, 'build'),
     publicPath:'./',
-    // 添加 chunkFilename
-    chunkFilename: '[name]-[id].js',
-    /*
-      name 是在代码里为创建的 chunk 指定的名字，如果代码中没指定则 webpack 默认分配 id 作为 name。
-
-      .[chunkhash:5]. 是文件的 hash 码，这里只使用前五位。
-    */
+    chunkFilename: '[name]@[chunkhash].js',
   },
-  devtool: 'inline-source-map',   //生产环境下使用
+  devtool: 'inline-source-map',
   module: {
    rules: [
-     // {
-     //    test: /\.bundle\.js$/,
-     //    loader: 'bundle-loader',
-     //    options: {
-     //      lazy: true ,
-     //      name: '[name]'
-     //    }
-     // },
      {
         test:/\.(png|jpg|gif)$/,
         loaders:[
@@ -39,19 +31,44 @@ const config = {
         'image-webpack-loader'
         ]
       },
-     {
-        test:/\.css$/,
-        use: ['style-loader', 'css-loader']
-     },
+      // {
+      //       test:/\.css$/,
+      //       use:ExtractTextPlugin.extract({
+      //           fallback:'style-loader',
+      //           use:{
+      //             loader: 'css-loader',
+      //             options: {
+      //               minimize:true
+      //             }
+      //           }
+      //           // publicPath:'../' //解决css背景图的路径问题
+      //       })
+      // },
+      {
+        test: /\.scss$/,
+        use:ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            //如果需要，可以在 sass-loader 之前将 resolve-url-loader 链接进来
+            use: [
+              'css-loader',
+              // 'style-loader',
+              {
+                loader: 'postcss-loader',
+                options: {
+                  config: {
+                    path: 'postcss.config.js'  // 这个得在项目根目录创建此文件
+                  }
+                }
+              },
+              'sass-loader'
+            ]
+          })
+
+      },
      {
         test: /\.(js|jsx)$/,
-        use:{
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015', 'stage-0', 'react'],
-            plugins: []
-          }
-        }
+        use: ['babel-loader'],
+        exclude: /node_modules/
      },
      {
         test: /\.(vue)$/,
@@ -64,23 +81,38 @@ const config = {
    ]
   },
   plugins: [
+    new CleanWebpackPlugin(['build/*']),
     new webpack.BannerPlugin('版权所有，哈哈哈哈哈哈哈哈哈哈哈哈哈'),
     new UglifyJSPlugin({
        sourceMap: true,
        uglifyOptions: {
-       compress: {
-         drop_console: true
+         compress: {
+           drop_console: true
+         }
        }
-     }
-    }),//压缩
+    }),
     new HtmlWebpackPlugin({
       template:'./template.html'
-    }),//创建html页面  https://www.cnblogs.com/wonyun/p/6030090.html 详解配置设置模板，输出位置，多个HTML页面
-    // new webpack.optimize.CommonsChunkPlugin({
-    //    name: 'common' // 指定公共 bundle 的名称。
-    // })
-    // CommonsChunkPlugin 插件可以将公共的依赖模块提取到已有的入口 chunk 中，或者提取到一个新生成的 chunk。
-  ]
+    }),
+    new VueLoaderPlugin(),
+    new ExtractTextPlugin( "css/[name]@[chunkhash].css" ),
+    // new PurifyCssWebpack({   //消除 css 冗余代码
+    //     paths:glob.sync(path.join(__dirname,'/*.html'))
+    // }),
+    new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
+      canPrint: true
+    })
+  ],
+  resolve: {
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
+  }
 }
 
 module.exports = config;

@@ -5,7 +5,7 @@
    </div>
 </template>
 
-<style>
+<style lang="scss">
 .heihei{
   color:red
 }
